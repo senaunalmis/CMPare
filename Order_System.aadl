@@ -1,0 +1,42 @@
+package Order_System
+public
+
+system Order
+    features
+        get_req          : in data port;
+        send_reply       : out data port;
+end Order;
+
+system User
+    features
+        get_user_name    : in data port;
+        get_user_email   : in data port;
+        get_user_phone   : in data port;
+        get_user_address : in data port;
+        
+        sendUserInfo     : out data port;
+end User;
+
+system Product
+    features
+        get_product_name : in data port;
+        get_product_ID   : in data port;
+        get_product_price: in data port;
+        get_description  : in data port;
+        
+        sendProductOrderInfo : out data port;
+end Product;
+
+	system implementation Order.Impl
+		subcomponents
+			u : system user;
+			p : system product;
+		connections
+			C1  : port P.sendProductOrderInfo -> U.get_user_name;
+            C2  : port P.sendProductOrderInfo -> U.get_user_email;
+            C3  : port P.sendProductOrderInfo -> U.get_user_phone;
+            C4  : port P.sendProductOrderInfo -> U.get_user_address;
+			
+	end Order.Impl;
+
+end Order_System;

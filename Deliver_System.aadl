@@ -1,0 +1,87 @@
+package deliver_system
+public
+	system Deliver
+		features
+			get_req              : in data port;
+			send_reply          : out data port;
+	end Deliver;
+	
+	system User 
+		features
+			get_user_name       : in data port;
+			get_user_ID         : in data port;
+			get_user_email      : in data port;
+			get_user_address    : in data port;
+			
+			sendUserInfo        : out data port;
+			
+	end User;
+	
+	system Product
+		features
+			get_product_name    : in data port;
+			get_product_ID      : in data port;
+			
+			sendProductInfo     : out data port;		
+	
+	end Product;
+	
+	system Seller
+		features
+			get_seller_name     : in data port;
+			get_seller_ID       : in data port;
+			get_seller_email    : in data port;
+			get_seller_phoneNum : in data port;	
+			get_seller_address  : in data port;
+			
+			sendSellerInfo      : out data port;
+			
+	end Seller;
+	
+	system delivery_guy
+		features
+			DG_name             : in data port;
+			DG_ID               : in data port;
+			DG_phoneNum         : in data port;
+			
+			sendDGInfo          : out data port;
+			
+			
+	end delivery_guy;
+		
+	system implementation Deliver.Impl
+		subcomponents
+			U : system User;
+			P : system Product;
+			S : system Seller;
+			DG: system delivery_guy;
+		connections	
+			C1: port P.sendProductInfo -> U.get_user_name;
+			C2: port P.sendProductInfo -> U.get_user_ID;
+			C3: port P.sendProductInfo -> U.get_user_email;
+			C4: port P.sendProductInfo -> U.get_user_address;
+			C5: port U.sendUserInfo    -> S.get_seller_name;
+			C6: port U.sendUserInfo    -> S.get_seller_ID;
+			C7: port U.sendUserInfo    -> S.get_seller_email;
+			C8: port U.sendUserInfo    -> S.get_seller_phoneNum;
+			C9: port U.sendUserInfo    -> DG.DG_name;
+			C10:port U.sendUserInfo    -> DG.DG_ID;
+			C11:port U.sendUserInfo    -> DG.DG_phoneNum;
+			C12:port S.sendSellerInfo  -> DG.DG_name;
+			C13:port S.sendSellerInfo  -> DG.DG_ID;
+			C14:port S.sendSellerInfo  -> DG.DG_phoneNum;
+			C15:port P.sendProductInfo -> DG.DG_name;
+			C16:port P.sendProductInfo -> DG.DG_ID;
+			C17:port P.sendProductInfo -> DG.DG_phoneNum;
+			C18:port DG.sendDGInfo     -> U.get_user_name;
+			C19:port DG.sendDGInfo     -> U.get_user_ID;
+			C20:port DG.sendDGInfo     -> U.get_user_email;
+			C21:port DG.sendDGInfo     -> U.get_user_address;
+			C22:port DG.sendDGInfo     -> S.get_seller_name;
+			C23:port DG.sendDGInfo     -> S.get_seller_ID;
+			C24:port DG.sendDGInfo     -> S.get_seller_email;
+			C25:port DG.sendDGInfo     -> S.get_seller_phoneNum;
+			
+	end Deliver.Impl;
+			
+end deliver_system;

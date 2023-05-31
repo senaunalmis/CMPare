@@ -1,0 +1,62 @@
+package payment
+public
+	system payment
+		features
+			get_req          : in data port;
+			send_reply       : out data port;
+	end payment;
+	
+	system user
+		features
+			get_user_name    : in data port;
+            get_user_email   : in data port;
+            get_user_phone   : in data port;
+            get_user_adress  : in data port;
+            
+            sendUserPaymentInfo : out data port;
+	end user;
+	
+		system product 
+		features
+			get_product_name : in data port;
+            get_product_ID   : in data port;
+            get_product_price: in data port;
+            
+            sendProductPaymentInfo : out data port;
+	end product;
+		
+	system credit_card
+		features
+			Card_Owner_Name  : in data port;
+            Card_Number      : in data port;
+            Card_Date        : in data port;
+            Card_CVV         : in data port;
+            
+            sendCreditCardInfo : out data port; 
+	end credit_card;
+	
+	system OnlineBankCheck
+		features
+			getCardInfo        : in data port;
+			paymentVerification: out data port;
+		
+	end OnlineBankCheck;
+	
+	system implementation payment.Impl
+		subcomponents
+			U   : system User;
+			P   : system Product;
+			CC  : system Credit_Card;
+			OBC : system OnlineBankCheck;
+		
+		connections
+			C1 : port P.sendProductPaymentInfo -> U.get_user_name;
+			C2 : port P.sendProductPaymentInfo -> U.get_user_email;
+			C3 : port P.sendProductPaymentInfo -> U.get_user_phone;
+			C4 : port CC.sendCreditCardInfo    -> U.get_user_name;
+			C5 : port CC.sendCreditCardInfo    -> U.get_user_email;
+			C6 : port CC.sendCreditCardInfo    -> U.get_user_phone;
+			C7 : port CC.sendCreditCardInfo    -> OBC.getCardInfo;
+	end payment.Impl;
+	
+end payment;

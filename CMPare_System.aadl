@@ -1,0 +1,77 @@
+package CMPare
+public
+	
+	with payment;
+	with Order_System;
+	with Deliver_System;
+	with customer_Service;
+	
+	system webServer 
+		features
+			get_req     : in data port;
+			control_HB  : in data port;
+			
+			send_reply  : out data port;
+			send_HB     : out data port;
+	end webServer;
+	
+	
+	system monitoringServer 
+		features 
+			receive_HB : in data port;
+	end monitoringServer;
+	
+	
+	system implementation webServer.Impl
+		subcomponents
+			PM : system payment::Payment.Impl;
+			OS : system Order_System::Order.Impl;
+			DS : system Deliver_System::Deliver.Impl;
+			CS : system customer_Service::customerService.Impl;
+		connections
+			C1 : port get_req       -> PM.get_Req;
+			C2 : port get_req       -> OS.get_Req;
+			C3 : port get_req       -> DS.get_Req;
+			C4 : port get_req       -> CS.get_Req;
+			C5 : port PM.send_reply -> send_reply;
+			C6 : port OS.send_reply -> send_reply;
+			C7 : port DS.send_reply -> send_reply;
+			C8 : port CS.send_reply -> send_reply;
+						
+	end webServer.Impl;
+	
+	system monitoringComponent
+		features
+			receive_HB : in data port;
+	end monitoringComponent;
+	
+	system implementation monitoringServer.Impl
+		subcomponents 
+			MC:system monitoringComponent;
+		connections
+			C1: port receive_HB -> MC.receive_HB;
+	end monitoringServer.Impl;
+	
+	system mySQL
+		
+	end mySQL;
+	
+	system CMPareSystem
+		features
+			get_req    : in data port;
+			send_reply : out data port;
+	end CMPareSystem;
+	
+	system implementation CMPareSystem.Impl
+		subcomponents
+			WS : system webServer.Impl;
+			MS : system monitoringServer;
+			SQL: system mySQL;
+		connections
+			C1: port WS.send_HB    -> MS.receive_HB;
+			C2: port get_req       -> WS.get_req;
+			C3: port WS.send_reply -> send_reply; 
+			
+	end CMPareSystem.Impl;
+	
+end CMPare;

@@ -1,0 +1,116 @@
+package Customer_Service
+public
+	system CustomerService 
+		features
+			get_req          : in data port;
+			send_reply       : out data port;
+	end CustomerService;
+	
+	
+	
+	system CustomerServiceStuff
+		features
+			CS_Stuff_name       : in data port;
+			CS_Stuff_ID         : in data port;
+			CS_Stuff_email      : in data port;
+			CS_Stuff_phoneNum   : in data port;
+			CS_getQuestion      : in data port;
+			CS_getAnswer        : in data port;
+			
+			sendStuffInfo       : out data port;
+			CS_sendAnswer       : out data port;
+			CS_sendQuestion     : out data port;	
+	end CustomerServiceStuff;
+	
+	
+	
+	system User
+		features
+			get_user_name       : in data port;
+			get_user_ID         : in data port;
+			get_user_email      : in data port;
+			get_user_answer     : in data port;
+			
+			send_user_question  : out data port;
+			sendUserInfo        : out data port;
+	end User;
+	
+	
+	
+	system Website_Owner
+		features
+			get_owner_name      : in data port;
+			get_owner_email     : in data port;
+			OW_getQuestion      : in data port;
+			OW_sendAnswer       : out data port;
+	end Website_Owner;
+	
+	
+	
+	system Seller
+		features
+			get_seller_name     : in data port;
+			get_seller_ID       : in data port;
+			get_seller_email    : in data port;
+			get_seller_question : in data port;
+			get_seller_answer   : in data port;
+			
+			send_seller_question: out data port;
+			sendSellerInfo      : out data port;
+	end Seller;
+	
+	
+	
+	system Product
+		features
+			get_product_name    : in data port;
+			get_product_ID      : in data port;
+			get_product_category: in data port;
+			get_product_comment : in data port;
+			
+			sendProductInfo     : out data port;		
+	end Product;
+		
+	system implementation CustomerService.Impl
+		subcomponents
+			U   : system User;
+			WO  : system Website_Owner;
+			S   : system Seller;
+			P   : system Product;
+			CSS : system CustomerServiceStuff;
+			
+		connections
+			C1 :  port U.sendUserInfo        -> WO.get_Owner_email;
+			C2 :  port U.sendUserInfo        -> WO.get_Owner_name;
+			C3 :  port U.sendUserInfo        -> S.get_seller_email;
+			C4 :  port U.sendUserInfo        -> S.get_seller_name;
+			C5 :  port U.sendUserInfo        -> S.get_seller_ID;
+			C6 :  port U.sendUserInfo        -> CSS.CS_Stuff_name;
+			C7 :  port U.sendUserInfo        -> CSS.CS_Stuff_ID;
+			C8 :  port U.sendUserInfo        -> CSS.CS_Stuff_email;
+			C9 :  port U.sendUserInfo        -> CSS.CS_Stuff_phoneNum;
+			C10:  port P.sendProductInfo     -> U.get_user_name;
+			C11:  port P.sendProductInfo     -> U.get_user_email;
+			C12:  port P.sendProductInfo     -> U.get_user_ID;
+			C13:  port P.sendProductInfo     -> WO.get_Owner_email;
+			C14:  port P.sendProductInfo     -> WO.get_Owner_name;
+			C15:  port P.sendProductInfo     -> S.get_seller_email;
+			C16:  port P.sendProductInfo     -> S.get_seller_name;
+			C17:  port P.sendProductInfo     -> S.get_seller_ID;
+			C18:  port P.sendproductInfo     -> CSS.CS_Stuff_name;
+			C19:  port P.sendproductInfo     -> CSS.CS_Stuff_ID;
+			C20:  port P.sendproductInfo     -> CSS.CS_Stuff_email;
+			C21:  port P.sendproductInfo     -> CSS.CS_Stuff_phoneNum;
+			C22:  port CSS.sendStuffInfo     -> WO.get_Owner_email;
+			C23:  port CSS.sendStuffInfo     -> WO.get_Owner_name;
+			C24:  port U.send_user_question  -> CSS.CS_getQuestion;
+			C25:  port S.send_seller_question-> CSS.CS_getQuestion; 
+			C26:  port CSS.CS_sendQuestion   -> WO.OW_getQuestion;
+			C27:  port WO.OW_sendAnswer      -> CSS.CS_getAnswer;
+			C28:  port CSS.CS_sendAnswer     -> U.get_user_answer;
+			C29:  port CSS.CS_sendAnswer     -> S.get_seller_answer;
+			C30:  port U.send_user_question  -> S.get_seller_question;
+			
+	end CustomerService.Impl;
+	
+end Customer_Service;
